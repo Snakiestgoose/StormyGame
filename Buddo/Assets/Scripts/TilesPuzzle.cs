@@ -8,6 +8,7 @@ public class TilesPuzzle : MonoBehaviour
     [SerializeField] private TilesPuzzlePiece[,] pieces = new TilesPuzzlePiece[4, 4];
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private int counter =0;
+    [SerializeField] GameObject WholeMap;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +30,7 @@ public class TilesPuzzle : MonoBehaviour
             }
         }
         SetCorrectPositions();
-        SetInitialCounter();
+        //SetInitialCounter();
 
         
     }
@@ -70,7 +71,7 @@ public class TilesPuzzle : MonoBehaviour
         pieces[0, 0].SetTargetPosition(2, 2); //13 ->07
         pieces[1, 0].SetTargetPosition(3, 3); //14 ->04
         pieces[2, 0].SetTargetPosition(1, 0); //15 ->14
-        pieces[3, 0].SetTargetPosition(0, 0); //16 ->16
+        pieces[3, 0].SetTargetPosition(3, 0); //16 ->16
         
         
         
@@ -95,7 +96,7 @@ public class TilesPuzzle : MonoBehaviour
         from.UpdatePos(x + dx, y + dy);
         target.UpdatePos(x, y);
 
-        if (from.IsInCorrectPosition())
+       /* if (from.IsInCorrectPosition())
         {
             counter++;
             from.ChnageState(true);
@@ -108,6 +109,10 @@ public class TilesPuzzle : MonoBehaviour
                 from.ChnageState(false);
             }
         }
+        if (counter == 15)
+        {
+            Debug.Log("Win");
+        }*/
     }
 
     public int GetDx(int x, int y)
@@ -138,5 +143,33 @@ public class TilesPuzzle : MonoBehaviour
             return -1;
         }
         return 0;
+    }
+    public void CheckWinCondition()
+    {
+        counter = 0;
+        for (int j = 3; j >= 0; j--)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (pieces[i, j].IsInCorrectPosition())
+                {
+                    counter++;
+                }
+            }
+        }
+        if (counter == 16)
+        {
+            Debug.Log("Win");
+            WholeMap.SetActive(true);
+            for (int a = 0; a < transform.childCount; a++)
+            {
+                transform.GetChild(a).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.Log("There are " + counter + "pieces well placed");
+        }
+        
     }
 }
